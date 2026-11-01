@@ -1,0 +1,320 @@
+\documentclass[11pt]{scrreprt}
+\usepackage[sexy,noasy]{evan}
+\input{preamble.sty}
+
+\begin{document}
+
+% Union
+\begin{theorem*}[Closure Under Union]
+    The set of regular languages is closed under union.
+\end{theorem*}
+
+\begin{proof}
+    Let $\mathcal{R}_L$ be the set of all regular languages.
+
+    We need to show that
+    \[
+        \forall L_1, L_2 \in \mathcal{R}_L,
+        \qquad L_1 \cup L_2 \in \mathcal{R}_L.
+    \]
+
+    Since $L_1$ and $L_2$ are regular, there exist two DFAs
+    \[
+        D_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)
+    \]
+    and
+    \[
+        D_2 = (Q_2, \Sigma, \delta_2, q_2, F_2)
+    \]
+    that recognize $L_1$ and $L_2$, respectively.
+
+    We construct a new DFA
+    \[
+        D = (Q, \Sigma, \delta, q_0, F)
+    \]
+    that recognizes $L_1 \cup L_2$, where:
+
+    \begin{enumerate}
+        \item $Q = Q_1 \times Q_2$.
+
+        \item $\Sigma$ is the common input alphabet
+        of $D_1$ and $D_2$.
+
+        \item The transition function $\delta$ is defined as
+        \[
+            \delta((r_1,r_2),a)
+            =
+            (\delta_1(r_1,a),\delta_2(r_2,a))
+        \]
+        for all $r_1 \in Q_1$, $r_2 \in Q_2$,
+        and $a \in \Sigma$.
+
+        \item $q_0 = (q_1,q_2)$.
+
+        \item The set of accepting states is
+        \[
+            F =
+            \left\{
+                (r_1,r_2)
+                \mid
+                r_1 \in F_1
+                \text{ or }
+                r_2 \in F_2
+            \right\}.
+        \]
+
+        Equivalently,
+        \[
+            F =
+            (F_1 \times Q_2)
+            \cup
+            (Q_1 \times F_2).
+        \]
+    \end{enumerate}
+
+    The DFA $D$ simulates both $D_1$ and $D_2$
+    simultaneously and accepts a string if
+    either $D_1$ or $D_2$ accepts it.
+
+    Therefore,
+    \[
+        L(D) = L_1 \cup L_2.
+    \]
+
+    Since $D$ is a DFA that recognizes
+    $L_1 \cup L_2$, the language
+    $L_1 \cup L_2$ is regular.
+
+    Hence,
+    \[
+        \boxed{
+            \mathcal{R}_L
+            \text{ is closed under union.}
+        }
+    \]
+\end{proof}
+
+% Complement
+\begin{theorem*}[Closure Under Complement]
+    The set of regular languages is closed under complement.
+\end{theorem*}
+
+\begin{proof}
+    Let $\mathcal{R}_L$ be the set of all regular languages.
+
+    We need to show that
+    \[
+        \forall L \in \mathcal{R}_L,
+        \qquad \overline{L} \in \mathcal{R}_L.
+    \]
+
+    Since $L$ is regular, there exists a DFA
+    \[
+        M = (Q, \Sigma, \delta, q_0, F)
+    \]
+    that recognizes $L$.
+
+    We construct a new DFA
+    \[
+        M' = (Q', \Sigma', \delta', q_0', F')
+    \]
+    that recognizes $\overline{L}$, where:
+
+    \begin{enumerate}
+        \item $Q' = Q$.
+
+        \item $\Sigma' = \Sigma$.
+
+        \item $\delta'(q,a) = \delta(q,a)$,
+        for all $q \in Q$ and $a \in \Sigma$.
+
+        \item $q_0' = q_0$.
+
+        \item $F' = Q - F$.
+    \end{enumerate}
+
+    The DFA $M'$ has the same states, alphabet,
+    transitions, and start state as $M$, but its
+    accepting and non-accepting states are interchanged.
+
+    Therefore,
+    \[
+        L(M') = \overline{L} = \Sigma^* - L.
+    \]
+
+    Since $M'$ is a DFA that recognizes
+    $\overline{L}$, the language $\overline{L}$
+    is regular.
+
+    Hence,
+    \[
+        \boxed{
+            \mathcal{R}_L
+            \text{ is closed under complement.}
+        }
+    \]
+\end{proof}
+
+% Intersection
+\begin{theorem*}[Closure Under Intersection]
+    The set of regular languages is closed under intersection.
+\end{theorem*}
+
+\begin{proof}
+    Let $\mathcal{R}_L$ be the set of all regular languages.
+
+    We need to show that
+    \[
+        \forall L_1, L_2 \in \mathcal{R}_L,
+        \qquad L_1 \cap L_2 \in \mathcal{R}_L.
+    \]
+
+    Since $L_1$ and $L_2$ are regular, there exist two DFAs
+    \[
+        D_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)
+    \]
+    and
+    \[
+        D_2 = (Q_2, \Sigma, \delta_2, q_2, F_2)
+    \]
+    that recognize $L_1$ and $L_2$, respectively.
+
+    We construct a new DFA
+    \[
+        D = (Q, \Sigma, \delta, q_0, F)
+    \]
+    that recognizes $L_1 \cap L_2$, where:
+
+    \begin{enumerate}
+        \item $Q = Q_1 \times Q_2$.
+
+        \item $\Sigma$ is the common input alphabet of $D_1$ and $D_2$.
+
+        \item The transition function $\delta$ is defined as
+        \[
+            \delta((r_1,r_2),a)
+            =
+            (\delta_1(r_1,a),\delta_2(r_2,a))
+        \]
+        for all $r_1 \in Q_1$, $r_2 \in Q_2$, and $a \in \Sigma$.
+
+        \item $q_0 = (q_1,q_2)$.
+
+        \item The set of accepting states is
+        \[
+            F =
+            \left\{
+                (r_1,r_2)
+                \mid
+                r_1 \in F_1 \text{ and } r_2 \in F_2
+            \right\}.
+        \]
+
+        Equivalently,
+        \[
+            F = F_1 \times F_2.
+        \]
+    \end{enumerate}
+
+    The DFA $D$ simulates both $D_1$ and $D_2$ simultaneously
+    and accepts a string if both $D_1$ and $D_2$ accept it.
+
+    Therefore,
+    \[
+        L(D) = L_1 \cap L_2.
+    \]
+
+    Since $D$ is a DFA that recognizes $L_1 \cap L_2$,
+    the language $L_1 \cap L_2$ is regular.
+
+    Hence,
+    \[
+        \boxed{
+            \mathcal{R}_L
+            \text{ is closed under intersection.}
+        }
+    \]
+\end{proof}
+
+% Difference
+\begin{theorem*}[Closure Under Difference]
+    The set of regular languages is closed under difference.
+\end{theorem*}
+
+\begin{proof}
+    Let $\mathcal{R}_L$ be the set of all regular languages.
+
+    We need to show that
+    \[
+        \forall L_1, L_2 \in \mathcal{R}_L,
+        \qquad L_1 - L_2 \in \mathcal{R}_L.
+    \]
+
+    Since $L_1$ and $L_2$ are regular, there exist two DFAs
+    \[
+        D_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)
+    \]
+    and
+    \[
+        D_2 = (Q_2, \Sigma, \delta_2, q_2, F_2)
+    \]
+    that recognize $L_1$ and $L_2$, respectively.
+
+    We construct a new DFA
+    \[
+        D = (Q, \Sigma, \delta, q_0, F)
+    \]
+    that recognizes $L_1 - L_2$, where:
+
+    \begin{enumerate}
+        \item $Q = Q_1 \times Q_2$.
+
+        \item $\Sigma$ is the common input alphabet of $D_1$ and $D_2$.
+
+        \item The transition function $\delta$ is defined as
+        \[
+            \delta((r_1,r_2),a)
+            =
+            (\delta_1(r_1,a),\delta_2(r_2,a))
+        \]
+        for all $r_1 \in Q_1$, $r_2 \in Q_2$, and $a \in \Sigma$.
+
+        \item $q_0 = (q_1,q_2)$.
+
+        \item The set of accepting states is
+        \[
+            F =
+            \left\{
+                (r_1,r_2)
+                \mid
+                r_1 \in F_1 \text{ and } r_2 \notin F_2
+            \right\}.
+        \]
+
+        Equivalently,
+        \[
+            F = F_1 \times (Q_2 - F_2).
+        \]
+    \end{enumerate}
+
+    The DFA $D$ simulates both $D_1$ and $D_2$ simultaneously
+    and accepts a string if $D_1$ accepts it and $D_2$ rejects it.
+
+    Therefore,
+    \[
+        L(D) = L_1 - L_2.
+    \]
+
+    Since $D$ is a DFA that recognizes $L_1 - L_2$,
+    the language $L_1 - L_2$ is regular.
+
+    Hence,
+    \[
+        \boxed{
+            \mathcal{R}_L
+            \text{ is closed under difference.}
+        }
+    \]
+\end{proof}
+
+\end{document}
