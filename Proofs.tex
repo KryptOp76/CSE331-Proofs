@@ -2,9 +2,56 @@
 \usepackage[sexy,noasy]{evan}
 \input{preamble.sty}
 
+% Cover and contents configuration
+\setcounter{tocdepth}{1}
+\setcounter{secnumdepth}{1}
+\renewcommand{\contentsname}{Contents}
+
 \begin{document}
 
+% --------------------------------------------------
+% Cover page (page 1)
+% --------------------------------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{\fill}
+    
+    {\LARGE\bfseries CSE331 Proofs\par}
+
+    \vspace{0.5cm}
+
+    {\large Automata and Computability\par}
+
+    \vspace{1.5cm}
+
+    {\large\scshape Irfan Rahman\par}
+
+    \vspace{0.7cm}
+
+    {\small November 2026\par}
+
+    \vspace*{\fill}
+\end{titlepage}
+
+% --------------------------------------------------
+% Table of contents (page 2)
+% --------------------------------------------------
+\pagenumbering{roman}
+\setcounter{page}{1}
+\tableofcontents
+\clearpage
+
+% --------------------------------------------------
+% Part I: Midterm
+% --------------------------------------------------
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\chapter{Midterm}
+
+
+
 % Union
+\section{Closure Under Union}
 \begin{theorem*}[Closure Under Union]
     The set of regular languages is closed under union.
 \end{theorem*}
@@ -95,6 +142,7 @@
 \end{proof}
 
 % Complement
+\section{Closure Under Complement}
 \begin{theorem*}[Closure Under Complement]
     The set of regular languages is closed under complement.
 \end{theorem*}
@@ -156,6 +204,7 @@
 \end{proof}
 
 % Intersection
+\section{Closure Under Intersection}
 \begin{theorem*}[Closure Under Intersection]
     The set of regular languages is closed under intersection.
 \end{theorem*}
@@ -237,6 +286,7 @@
 \end{proof}
 
 % Difference
+\section{Closure Under Difference}
 \begin{theorem*}[Closure Under Difference]
     The set of regular languages is closed under difference.
 \end{theorem*}
@@ -316,5 +366,182 @@
         }
     \]
 \end{proof}
+
+% Concatenation
+\section{Closure Under Concatenation}
+
+\begin{theorem*}[Closure Under Concatenation]
+    The set of regular languages is closed under concatenation.
+\end{theorem*}
+
+\begin{proof}
+    Let $\mathcal{R}_L$ be the set of all regular languages.
+
+    We need to show that
+    \[
+        \forall L_1, L_2 \in \mathcal{R}_L,
+        \qquad L_1 \circ L_2 \in \mathcal{R}_L.
+    \]
+
+    Since $L_1$ and $L_2$ are regular, there exist two NFAs
+    \[
+        N_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)
+    \]
+    and
+    \[
+        N_2 = (Q_2, \Sigma, \delta_2, q_2, F_2)
+    \]
+    that recognize $L_1$ and $L_2$, respectively.
+
+    We construct a new NFA
+    \[
+        N = (Q, \Sigma, \delta, q_0, F)
+    \]
+    that recognizes $L_1 \circ L_2$, where:
+
+    \begin{enumerate}
+        \item $Q = Q_1 \cup Q_2$, assuming $Q_1$ and $Q_2$
+        are disjoint.
+
+        \item $\Sigma$ is the common input alphabet
+        of $N_1$ and $N_2$.
+
+        \item The transition function $\delta$ is defined as follows:
+
+        For every $q \in Q$ and $a \in \Sigma_\varepsilon$,
+        \[
+            \delta(q,a) =
+            \begin{cases}
+                \delta_1(q,a),
+                & q \in Q_1,\ q \notin F_1,\\[4pt]
+                \delta_1(q,a),
+                & q \in F_1,\ a \neq \varepsilon,\\[4pt]
+                \delta_1(q,a) \cup \{q_2\},
+                & q \in F_1,\ a = \varepsilon,\\[4pt]
+                \delta_2(q,a),
+                & q \in Q_2.
+            \end{cases}
+        \]
+
+        \item $q_0 = q_1$.
+
+        \item $F = F_2$.
+    \end{enumerate}
+
+    The NFA $N$ begins processing the input using $N_1$.
+    Upon reaching an accepting state of $N_1$, it may
+    move to the start state of $N_2$ through an
+    $\varepsilon$-transition and process the remaining input.
+
+    Thus, $N$ accepts a string if it can be divided
+    into two parts such that $N_1$ accepts the first
+    part and $N_2$ accepts the second part.
+
+    Therefore,
+    \[
+        L(N) = L_1 \circ L_2.
+    \]
+
+    Since $N$ is an NFA that recognizes $L_1 \circ L_2$,
+    the language $L_1 \circ L_2$ is regular.
+
+    Hence,
+    \[
+        \boxed{
+            \mathcal{R}_L
+            \text{ is closed under concatenation.}
+        }
+    \]
+\end{proof}    
+
+% Kleene star
+\section{Closure Under Kleene Star}
+\begin{theorem*}[Closure Under Kleene Star]
+    The set of regular languages is closed under Kleene star.
+\end{theorem*}
+
+\begin{proof}
+    Let $\mathcal{R}_L$ be the set of all regular languages.
+
+    We need to show that
+    \[
+        \forall L \in \mathcal{R}_L,
+        \qquad L^* \in \mathcal{R}_L.
+    \]
+
+    Since $L$ is regular, there exists an NFA
+    \[
+        N_1 = (Q_1, \Sigma, \delta_1, q_1, F_1)
+    \]
+    that recognizes $L$.
+
+    We construct a new NFA
+    \[
+        N = (Q, \Sigma, \delta, q_0, F)
+    \]
+    that recognizes $L^*$, where:
+
+    \begin{enumerate}
+        \item $Q = Q_1 \cup \{q_0\}$, where $q_0$ is a new state not in $Q_1$.
+
+        \item $\Sigma$ is the same input alphabet as $N_1$.
+
+        \item The transition function $\delta$ is defined as follows:
+
+        For every $q \in Q$ and $a \in \Sigma_\varepsilon$,
+        \[
+            \delta(q,a)=
+            \begin{cases}
+                \delta_1(q,a), & q \in Q_1,\ a \in \Sigma,\\[4pt]
+                \delta_1(q,\varepsilon) \cup \{q_1\},
+                    & q \in F_1,\ a=\varepsilon,\\[4pt]
+                \delta_1(q,\varepsilon),
+                    & q \in Q_1 - F_1,\ a=\varepsilon,\\[4pt]
+                \{q_1\}, & q=q_0,\ a=\varepsilon,\\[4pt]
+                \varnothing, & q=q_0,\ a\in\Sigma.
+            \end{cases}
+        \]
+
+        \item $q_0$ is the new start state.
+
+        \item The set of accepting states is
+        \[
+            F = F_1 \cup \{q_0\}.
+        \]
+    \end{enumerate}
+
+    The NFA $N$ introduces a new accepting start state $q_0$
+    to accept the empty string $\varepsilon$. It also adds an
+    $\varepsilon$-transition from $q_0$ to $q_1$ and from every
+    accepting state of $N_1$ back to $q_1$.
+
+    Thus, $N$ accepts the empty string or any string formed by
+    concatenating zero or more strings accepted by $N_1$.
+
+    Therefore,
+    \[
+        L(N)=L^*.
+    \]
+
+    Since $N$ is an NFA that recognizes $L^*$, the language
+    $L^*$ is regular.
+
+    Hence,
+    \[
+        \boxed{
+            \mathcal{R}_L
+            \text{ is closed under Kleene star.}
+        }
+    \]
+\end{proof}
+
+
+
+% --------------------------------------------------
+% Part II: Final (add proof sections here later)
+% --------------------------------------------------
+\chapter{Final}
+
+\noindent\emph{Final examination proofs will be added here.}
 
 \end{document}
